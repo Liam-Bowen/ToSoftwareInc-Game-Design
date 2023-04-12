@@ -14,15 +14,21 @@ public class PlayerJump : MonoBehaviour
     float jumpForce;
     bool jumping;
     bool jumpCancelled;
+    public float distanceToCheck;
+    public bool isGrounded;
 
     void Awake(){
         rb = GetComponent<Rigidbody>();
+        distanceToCheck = GetComponent<Collider>().bounds.extents.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, distanceToCheck + 0.1f);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
             jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics.gravity.y * gravityScale));
             rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
