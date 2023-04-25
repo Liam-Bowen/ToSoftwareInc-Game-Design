@@ -10,6 +10,7 @@ using System.Collections;
     public Transform guardSpot;
     public Transform target;
     Animator animator;
+    public float dogRange;
     float distanceFromPlayer;
     int MoveSpeed = 4;
     int MinDist = 3;
@@ -27,7 +28,7 @@ using System.Collections;
         transform.LookAt(target);
         //print(rb.velocity.magnitude);
  
-        if (distanceFromPlayer < 10.0)
+        if (distanceFromPlayer < dogRange)
         {
             animator.SetBool("TargetingPlayer", true);
             animator.SetBool("Awake", true);
