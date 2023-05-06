@@ -15,7 +15,9 @@ using System.Collections;
     public float dogRange;
     float distanceFromPlayer;
     public int MoveSpeed = 4;
+    public float gravityScale = 5;
     int MinDist = 90;
+    bool hasBarked = false;
 
     void Awake(){
         target = guardSpot;
@@ -28,23 +30,34 @@ using System.Collections;
         animator.SetFloat("Velocity", rb.velocity.magnitude);
         distanceFromPlayer = Vector3.Distance(transform.position, Player.position);
         transform.LookAt(target);
-        print(rb.velocity.magnitude);
+        //print(rb.velocity.magnitude);
  
         if (distanceFromPlayer < dogRange)
         {
             animator.SetBool("TargetingPlayer", true);
             animator.SetBool("Awake", true);
             target = Player;
-            transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-            dogBarkingSound.Play();
+            rb.AddForce(MoveSpeed * Time.deltaTime * transform.forward);
+
+            if(!hasBarked){
+                dogBarkingSound.Play();
+                hasBarked = true;
+            }
         }else{
             animator.SetBool("TargetingPlayer", false);
             target = guardSpot;
+            hasBarked = false;
             if(Vector3.Distance(transform.position, guardSpot.position) >= MinDist){
-                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+                rb.AddForce(MoveSpeed * Time.deltaTime * transform.forward);
             }else{
                 animator.SetBool("Awake", false);
             }
         }
     }
+
+    private void FixedUpdate()
+    {
+        rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass);
+    }
+
  }
