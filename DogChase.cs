@@ -10,10 +10,12 @@ using System.Collections;
     public Transform guardSpot;
     public Transform target;
     Animator animator;
+    public AudioSource dogBarkingSound;
+
     public float dogRange;
     float distanceFromPlayer;
-    int MoveSpeed = 4;
-    int MinDist = 3;
+    public int MoveSpeed = 4;
+    int MinDist = 90;
 
     void Awake(){
         target = guardSpot;
@@ -26,7 +28,7 @@ using System.Collections;
         animator.SetFloat("Velocity", rb.velocity.magnitude);
         distanceFromPlayer = Vector3.Distance(transform.position, Player.position);
         transform.LookAt(target);
-        //print(rb.velocity.magnitude);
+        print(rb.velocity.magnitude);
  
         if (distanceFromPlayer < dogRange)
         {
@@ -34,6 +36,7 @@ using System.Collections;
             animator.SetBool("Awake", true);
             target = Player;
             transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+            dogBarkingSound.Play();
         }else{
             animator.SetBool("TargetingPlayer", false);
             target = guardSpot;
